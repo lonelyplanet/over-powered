@@ -33,7 +33,8 @@ defmodule OverPowered.Mixfile do
      {:op_auth, github: "lonelyplanet/op-auth"},
      {:prometheus_plugs, "~> 1.1.0"},
      {:logster, "~> 0.4"},
-     {:httpotion, "~> 3.0.0"}
+     {:httpotion, "~> 3.0.0"},
+     {:ecto, "~> 2.2", only: :test}
     ]
   end
 end
