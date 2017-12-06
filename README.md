@@ -1,7 +1,11 @@
 # OverPowered
 
-Standardized Tooling and Reporting for OpenPlanet Projects that use
+Standardized Tooling, Utilities, and Reporting for OpenPlanet Projects that use
 Phoenix & Elixir.
+
+## Utilities
+
+  * OverPowered.Pagination : A module / structure to aid in pagination queries
 
 ## Installation
 
