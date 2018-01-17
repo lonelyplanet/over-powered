@@ -58,25 +58,21 @@ defmodule OverPowered.Pagination do
   def increase_limit_by(pagination=%__MODULE__{limit: limit}, delta)
     when is_integer(delta), do: %{ pagination | limit: limit + delta }
 
-  ## Insulate Ecto Features so as to not require that ecto be needed
-  ## in projects that don't use a database
-  if Code.ensure_loaded?(Ecto) do
-    @doc """
-    Given a query, this will apply the limit and offset to it
+  @doc """
+  Given a query, this will apply the limit and offset to it
 
-    ## Example
+  ## Example
 
-      iex> alias OverPowered.Pagination
-      iex> import Ecto.Query, only: [from: 1]
-      iex> query = from(a in "apples")
-      iex> %Pagination{limit: 100, offset: 100} |> Pagination.apply_to_query(query)
-      #Ecto.Query<from a in "apples", limit: ^100, offset: ^100>
+    iex> alias OverPowered.Pagination
+    iex> import Ecto.Query, only: [from: 1]
+    iex> query = from(a in "apples")
+    iex> %Pagination{limit: 100, offset: 100} |> Pagination.apply_to_query(query)
+    #Ecto.Query<from a in "apples", limit: ^100, offset: ^100>
 
-    """
-    def apply_to_query(%__MODULE__{limit: limit, offset: offset}, query) do
-      import Ecto.Query
-      from(query, limit: ^limit, offset: ^offset)
-    end
+  """
+  def apply_to_query(%__MODULE__{limit: limit, offset: offset}, query) do
+    import Ecto.Query
+    from(query, limit: ^limit, offset: ^offset)
   end
 
   @doc """

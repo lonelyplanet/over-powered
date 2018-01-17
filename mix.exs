@@ -34,7 +34,7 @@ defmodule OverPowered.Mixfile do
      {:prometheus_plugs, "~> 1.1.0"},
      {:logster, "~> 0.4"},
      {:httpotion, "~> 3.0.0"},
-     {:ecto, "~> 2.2", only: :test}
+     {:ecto, "~> 2.2"}
     ]
   end
 end
