@@ -5,7 +5,33 @@ Phoenix & Elixir.
 
 ## Utilities
 
-  * OverPowered.Pagination : A module / structure to aid in pagination queries
+### OverPowered.Pagination
+
+A module / structure to aid in pagination queries
+
+### OverPowered.Ids
+
+A module to provide effecient id only pagination through a data collection.
+
+Given a connection and specific options; this tool is designed to send a
+json-api payload which has a barebones payload that can be used for sitemap
+generation.
+
+The options are:
+
+  * repo:  The application Repo used to fetch database records
+  * scope: query to page through
+  * url:   A string template for each record's "self" url
+  * type:  Each document's "type" field
+  * extra_fields:  Sometimes you need more then the `id` field, this optional
+                   option should be a list of fields as atoms to select, note
+                   that `:id` is automatically included and is not needed in
+                   this list
+
+```elixir
+OverPowered.Ids.fetch(conn, repo: SomeApp.Repo, scope: SomeApp.User.not_deleted,
+                            url: "/users/:id", type: "user")
+```
 
 ## Installation
 
