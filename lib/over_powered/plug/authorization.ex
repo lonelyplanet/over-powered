@@ -11,6 +11,10 @@ defmodule OverPowered.Plug.Authorization do
   import Plug.Conn
   alias OverPowered.Connect2ID
 
+  defmodule Error do
+    defexception [:message]
+  end
+
   @split_scope ~r/^(op:.*):([rduc])$/
 
   defstruct scopes: %{}, id: ""
@@ -24,17 +28,22 @@ defmodule OverPowered.Plug.Authorization do
   auth structure is found then a check is made for an `authorization` header with
   a bearer token.  If one is found it calls out to connect2id with it otherwise it
   drops in an empty auth structure which is essentially an anonymous request.
+
+  **NOTE** The default functionality for a bad auth request is to treat it as an
+  anonymous request; if instead you would like to break the flow of the request
+  you can set an opt on the plug of `:error_on_bad_auth`.  This will force an
+  exception to raise fo `OverPowered.Plug.Authorization.Error`.
   """
   def call(conn=%{private: %{auth: %__MODULE__{}}}, _opts) do
     conn
   end
-  def call(conn, _opts) do
+  def call(conn, opts) do
     case get_req_header(conn, "authorization") do
       ["Bearer " <> token] ->
         put_private(conn, :auth,
           token
           |> Connect2ID.introspect_token
-          |> token_to_struct
+          |> token_to_struct(opts)
         )
       _ ->
         put_private(conn, :auth, %__MODULE__{})
@@ -57,7 +66,10 @@ defmodule OverPowered.Plug.Authorization do
   defp perm_to_atom("c"), do: :create
   defp perm_to_atom("u"), do: :update
 
-  defp token_to_struct(token) do
+  defp token_to_struct(%{"active"=>false}, :error_on_bad_auth) do
+    raise Error, "Authorization Failed"
+  end
+  defp token_to_struct(token, _) do
     %__MODULE__{
       scopes: parse_scopes(token["scope"] || ""),
       id: token["sub"] || ""
