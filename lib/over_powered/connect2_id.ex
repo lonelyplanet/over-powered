@@ -24,7 +24,7 @@ defmodule OverPowered.Connect2ID do
   """
   def introspect_token(token) do
     "/token/introspect"
-    |> post(body: "token=" <> URI.encode_www_form(token))
+    |> measure_post(body: "token=" <> URI.encode_www_form(token))
     |> case do
       %{body: body, status_code: 200} ->
         body
@@ -46,6 +46,12 @@ defmodule OverPowered.Connect2ID do
       {"Authorization", "Basic #{encoded_creds()}"},
       {"Content-Type", "application/x-www-form-urlencoded"}
     ]
+  end
+
+  defp measure_post(url, opts) do
+    {micro_secs, response} = :timer.tc(__MODULE__, :post, [url, opts])
+    Logger.metadata(connect_to_id_milliseconds: (micro_secs / 1000))
+    response
   end
 
   defp encoded_creds do
