@@ -28,7 +28,9 @@ defmodule OverPowered.Connect2ID do
     |> measure_post(body: "token=" <> URI.encode_www_form(token))
     |> case do
       %{body: body, status_code: 200} ->
-        Cachex.put(:token_cache, token, body, ttl: :timer.seconds(body["exp"] - body["iat"]))
+        if body["exp"] && body["iat"] do
+          Cachex.put(:token_cache, token, body, ttl: :timer.seconds(body["exp"] - body["iat"]))
+        end
         body
       error ->
         raise "Bad response when posting to /token/intropsect [#{error}]"
