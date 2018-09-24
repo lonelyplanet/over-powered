@@ -14,6 +14,7 @@ defmodule OverPowered.Application do
 
     # Define workers and child supervisors to be supervised
     children = [
+      worker(Cachex, [:token_cache, [limit: 1000]])
       # Starts a worker by calling: OverPowered.Worker.start_link(arg1, arg2, arg3)
       # worker(OverPowered.Worker, [arg1, arg2, arg3]),
     ]

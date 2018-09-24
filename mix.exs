@@ -15,7 +15,7 @@ defmodule OverPowered.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
-    [extra_applications: [:logger],
+    [extra_applications: [:logger, :cachex],
      mod: {OverPowered.Application, []}]
   end
 
@@ -34,7 +34,8 @@ defmodule OverPowered.Mixfile do
      {:prometheus_plugs, "~> 1.1.0"},
      {:logster, "~> 0.4"},
      {:httpotion, "~> 3.0.0"},
-     {:ecto, "~> 2.2"}
+     {:ecto, "~> 2.2"},
+     {:cachex, "~> 3.0"},
     ]
   end
 end

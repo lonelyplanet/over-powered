@@ -23,10 +23,12 @@ defmodule OverPowered.Connect2ID do
   https://connect2id.com/products/server/docs/api/token-introspection
   """
   def introspect_token(token) do
+    Cachex.get!(:token_cache, token) ||
     "/token/introspect"
     |> measure_post(body: "token=" <> URI.encode_www_form(token))
     |> case do
       %{body: body, status_code: 200} ->
+        Cachex.put(:token_cache, token, body, ttl: :timer.minutes(10))
         body
       error ->
         raise "Bad response when posting to /token/intropsect [#{error}]"
