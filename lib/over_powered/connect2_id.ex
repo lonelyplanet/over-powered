@@ -23,12 +23,12 @@ defmodule OverPowered.Connect2ID do
   https://connect2id.com/products/server/docs/api/token-introspection
   """
   def introspect_token(token) do
-    Cachex.get!(:token_cache, token) ||
+    from_cache(token) ||
     "/token/introspect"
     |> measure_post(body: "token=" <> URI.encode_www_form(token))
     |> case do
       %{body: body, status_code: 200} ->
-        Cachex.put(:token_cache, token, body, ttl: :timer.minutes(10))
+        Cachex.put(:token_cache, token, body, ttl: :timer.seconds(body["exp"] - body["iat"]))
         body
       error ->
         raise "Bad response when posting to /token/intropsect [#{error}]"
@@ -54,6 +54,17 @@ defmodule OverPowered.Connect2ID do
     {micro_secs, response} = :timer.tc(__MODULE__, :post, [url, opts])
     Logger.metadata(connect_to_id_milliseconds: (micro_secs / 1000))
     response
+  end
+
+  defp from_cache(token) do
+    case Cachex.get(:token_cache, token) do
+      {:ok, nil} ->
+        nil
+
+      {:ok, val} ->
+        Logger.metadata(connect_to_id_milliseconds: 0)
+        val
+    end
   end
 
   defp encoded_creds do
