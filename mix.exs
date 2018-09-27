@@ -31,7 +31,7 @@ defmodule OverPowered.Mixfile do
   defp deps do
     [{:check_up, github: "lonelyplanet/check_up"},
      {:op_auth, github: "lonelyplanet/op-auth"},
-     {:prometheus_plugs, "~> 1.1.0"},
+     {:prometheus_plugs, "~> 1.1.5"},
      {:logster, "~> 0.4"},
      {:httpotion, "~> 3.0.0"},
      {:ecto, "~> 2.2"},
