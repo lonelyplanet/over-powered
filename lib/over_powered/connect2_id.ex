@@ -14,6 +14,7 @@ defmodule OverPowered.Connect2ID do
 
   """
   use HTTPotion.Base
+  use Retry
 
   @doc """
   Used to check the access token presented to a resource server to verify it's
@@ -37,6 +38,17 @@ defmodule OverPowered.Connect2ID do
     end
   end
 
+  def post_with_retry(url, opts) do
+    import Stream, only: [cycle: 1, take: 2]
+
+    retry with: cycle([200]) |> take(6) do
+      case post(url, opts ++ [timeout: 1_000]) do
+        %HTTPotion.ErrorResponse{message: message} -> {:error, message}
+        valid_value -> valid_value
+      end
+    end
+  end
+
   defp process_response_body(body) do
     body |> IO.iodata_to_binary |> Poison.decode!
   end
@@ -53,7 +65,7 @@ defmodule OverPowered.Connect2ID do
   end
 
   defp measure_post(url, opts) do
-    {micro_secs, response} = :timer.tc(__MODULE__, :post, [url, opts])
+    {micro_secs, response} = :timer.tc(__MODULE__, :post_with_retry, [url, opts])
     Logger.metadata(connect_to_id_milliseconds: (micro_secs / 1000))
     response
   end
