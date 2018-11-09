@@ -42,10 +42,18 @@ defmodule OverPowered.Connect2ID do
     import Stream, only: [cycle: 1, take: 2]
 
     retry with: cycle([200]) |> take(6) do
-      case post(url, opts ++ [timeout: 1_000]) do
-        %HTTPotion.ErrorResponse{message: message} -> {:error, message}
-        valid_value -> valid_value
-      end
+      do_post(url, opts)
+    after
+      response -> response
+    else
+      error -> error
+    end
+  end
+
+  defp do_post(url, opts) do
+    case post(url, opts ++ [timeout: 1_000]) do
+      %HTTPotion.ErrorResponse{message: message} -> {:error, message}
+      valid_value -> valid_value
     end
   end
 
