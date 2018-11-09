@@ -35,7 +35,7 @@ defmodule OverPowered.Mixfile do
      {:httpotion, "~> 3.0.0"},
      {:ecto, "~> 2.2"},
      {:cachex, "~> 3.0"},
-     {:retry, "~> 0.8.0"},
+     {:retry, "~> 0.11"},
      {:logger_json, "~> 2.0.1"},
      {:jason, "~> 1.1"}
     ]
