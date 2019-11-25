@@ -1,0 +1,4 @@
+# Check compatibility between versions
+# https://github.com/elixir-lang/elixir/blob/master/lib/elixir/pages/Compatibility%20and%20Deprecations.md#compatibility-between-elixir-and-erlangotp
+elixir 1.9.2
+erlang 22.1

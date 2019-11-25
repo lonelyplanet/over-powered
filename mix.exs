@@ -5,7 +5,7 @@ defmodule OverPowered.Mixfile do
     [
       app: :over_powered,
       version: "0.1.0",
-      elixir: "~> 1.2",
+      elixir: "~> 1.6",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       deps: deps()
@@ -31,11 +31,11 @@ defmodule OverPowered.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:check_up, github: "lonelyplanet/check_up"},
-      {:op_auth, github: "lonelyplanet/op-auth"},
-      {:prometheus_plugs, "~> 1.1.0"},
+      {:check_up, github: "lonelyplanet/check_up", branch: "dh/update"},
+      {:op_auth, github: "lonelyplanet/op-auth", branch: "dh/update"},
+      {:prometheus_plugs, "~> 1.1"},
       {:httpotion, "~> 3.0.0"},
-      {:ecto, "~> 2.2 or ~> 3.0", optional: true},
+      {:ecto, "~> 3.2"},
       {:cachex, "~> 3.0"},
       {:retry, "~> 0.11"},
       {:logger_json, "~> 3.0"},
